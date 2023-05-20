@@ -12,5 +12,13 @@ public class GetController {
     public ResponseEntity<String> getGreeting(@RequestParam(name = "name", required=false, defaultValue="Hello World") String name) {
         return ResponseEntity.ok().header("header1", "value1").body(name);
     }
-    
+
+    @GetMapping(value="/sumTwoNumbers")
+    public ResponseEntity<String> sumTwoNumbers(
+        @RequestParam(name="valueX", required=true) String valueX,
+        @RequestParam(name="valueY", required=true) String valueY
+        ) {
+            int sum = Integer.parseInt(valueX) + Integer.parseInt(valueY);
+            return ResponseEntity.ok().body("Sum = " + sum);
+        }
 }
