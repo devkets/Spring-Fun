@@ -31,7 +31,7 @@ public class PostController {
     public ResponseEntity<PostResponseModel> verifySudoku(@RequestBody SudokuRequestModel request) {
 
         PostResponseModel response = new PostResponseModel();
-        response = postService.validateSudokuMatrix(request);
+        response = postService.carlinsValidationSpecial(request);
 
         return ResponseEntity.ok().body(response);
     }

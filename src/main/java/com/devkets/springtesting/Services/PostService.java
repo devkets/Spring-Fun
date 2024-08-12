@@ -10,10 +10,83 @@ import com.devkets.springtesting.Models.SudokuRequestModel;
 
 @Service
 public class PostService {
+
+    final int MAX_VALID = 45;
     
     public PostResponseModel buildPostResponse(PostRequestModel request) {
         
         return null;
+    }
+
+    public PostResponseModel carlinsValidationSpecial(SudokuRequestModel request) {
+        PostResponseModel response = new PostResponseModel();
+
+        List<String> matrixList = request.getLines();
+
+        boolean rowsValid = false;
+        boolean columnsValid = false;
+        boolean subMatrixValid = false;
+
+        /**
+         *        
+        "172549683",
+        "645873219",
+        "389261745",
+        "496327851",
+        "813456972",
+        "257198436",
+        "964715328",
+        "731682594",
+        "528934167"
+         */
+
+        for(String i : matrixList){
+            rowsValid = checkValidString(i);
+        }
+
+        
+        for (int i = 0; i < 9; i++){
+            StringBuilder sb = new StringBuilder();
+            for (String j : matrixList){
+                sb.append(j.charAt(i));
+            }
+            columnsValid = checkValidString(sb.toString());
+        }
+
+        for (int i = 0; i < 3; i++) {
+            StringBuilder sb = new StringBuilder();
+            for (String j : matrixList){
+                sb.append(j.charAt(i));
+            }
+        }
+
+
+
+        if (rowsValid) {
+            if (columnsValid) {
+                if (subMatrixValid){
+                    response.setMessage("Valid puzzle");
+                } else {
+                    response.setMessage("Sub matrix invalid");
+                }
+            } else {
+                response.setMessage("Columns invalid");
+            }
+        } else {
+            response.setMessage("Rows invalid");
+        }
+        return response;
+    }
+
+    public boolean checkValidString(String row){
+        int sum = 0;
+        for(int j = 0; j < row.length(); j++){
+            sum += Character.getNumericValue(row.charAt(j));
+        }
+        if (sum == MAX_VALID) {
+            return true;
+        }
+        return false;
     }
 
     public PostResponseModel validateSudokuMatrix(SudokuRequestModel request) {
