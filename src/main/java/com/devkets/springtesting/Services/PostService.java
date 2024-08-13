@@ -1,7 +1,7 @@
 package com.devkets.springtesting.Services;
 
 import java.util.List;
-
+import java.util.ArrayList;
 import org.springframework.stereotype.Service;
 
 import com.devkets.springtesting.Models.PostRequestModel;
@@ -17,6 +17,25 @@ public class PostService {
         
         return null;
     }
+
+
+    public PostResponseModel validateSudokuAllInOne(SudokuRequestModel request) {
+        List<String> matrixList = request.getLines();
+        PostResponseModel respone = new PostResponseModel();
+        List<int[]> listOfArrays = new ArrayList<int[]>();
+        
+        for(int i = 0; i < 9; i++){
+            int[] rowArray = new int[9];
+            for(int j = 0; j < 9; j++) {
+                rowArray[0] = Character.getNumericValue(matrixList.get(i).charAt(j));
+            }
+            listOfArrays.add(rowArray);
+        }
+
+
+        return respone;
+    }
+
 
     public PostResponseModel carlinsValidationSpecial(SudokuRequestModel request) {
         PostResponseModel response = new PostResponseModel();
