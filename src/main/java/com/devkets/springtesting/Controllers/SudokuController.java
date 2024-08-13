@@ -10,13 +10,13 @@ import com.devkets.springtesting.Models.PostRequestModel;
 import com.devkets.springtesting.Models.PostResponseModel;
 import com.devkets.springtesting.Models.SudokuRequestModel;
 import com.devkets.springtesting.Models.SudokuResponseModel;
-import com.devkets.springtesting.Services.PostService;
+import com.devkets.springtesting.Services.SudokuService;
 
 @RestController
-public class PostController {
+public class SudokuController {
 
     @Autowired
-    PostService postService;
+    SudokuService sudokuService;
 
     @PostMapping(value="/retrieveJSON")
     public ResponseEntity<PostResponseModel> retrieveJSON(@RequestBody PostRequestModel request) {
@@ -32,7 +32,7 @@ public class PostController {
     public ResponseEntity<SudokuResponseModel> verifySudoku(@RequestBody SudokuRequestModel request) {
 
         SudokuResponseModel response = new SudokuResponseModel();
-        response = postService.validateSudokuMatrix(request);
+        response = sudokuService.validateSudokuMatrix(request);
 
         return ResponseEntity.ok().body(response);
     }
@@ -41,7 +41,7 @@ public class PostController {
     public ResponseEntity<SudokuResponseModel> verifyCarlinSudoku(@RequestBody SudokuRequestModel request) {
 
         SudokuResponseModel response = new SudokuResponseModel();
-        response = postService.carlinsValidationSpecial(request);
+        response = sudokuService.carlinsValidationSpecial(request);
 
         return ResponseEntity.ok().body(response);
     }
