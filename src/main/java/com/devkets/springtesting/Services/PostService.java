@@ -4,24 +4,48 @@ import java.util.List;
 import java.util.ArrayList;
 import org.springframework.stereotype.Service;
 
-import com.devkets.springtesting.Models.PostRequestModel;
-import com.devkets.springtesting.Models.PostResponseModel;
 import com.devkets.springtesting.Models.SudokuRequestModel;
+import com.devkets.springtesting.Models.SudokuResponseModel;
 
 @Service
 public class PostService {
 
     final int MAX_VALID = 45;
-    
-    public PostResponseModel buildPostResponse(PostRequestModel request) {
-        
-        return null;
+
+    public SudokuResponseModel validateSudokuMatrix(SudokuRequestModel request) {
+        SudokuResponseModel response = new SudokuResponseModel();
+        response.setRequest(request);
+
+        if(request ==  null) {
+            response.setMessage("Input was null.");
+            return response;
+        }
+
+        List<String> matrixList = request.getLines();
+
+        int[][] sudokuMatrix = parseMatrix(matrixList);
+
+        if(!checkHorizontals(sudokuMatrix)) {
+            response.setMessage("Horizontals did not pass inspection.");
+            return response;
+        }
+        if(!checkVerticals(sudokuMatrix)) {
+            response.setMessage("Verticals did not pass inspection.");
+            return response;
+        }
+        if(!checkSubMatrices(sudokuMatrix)) {
+            response.setMessage("Sub 3x3s did not pass inspection.");
+            return response;
+        }
+        response.setMessage("Valid sudoku puzzle!");
+        return response;
     }
 
+    public SudokuResponseModel validateSudokuAllInOne(SudokuRequestModel request) {
+        SudokuResponseModel response = new SudokuResponseModel();
+        response.setRequest(request);
 
-    public PostResponseModel validateSudokuAllInOne(SudokuRequestModel request) {
         List<String> matrixList = request.getLines();
-        PostResponseModel respone = new PostResponseModel();
         List<int[]> listOfArrays = new ArrayList<int[]>();
         
         for(int i = 0; i < 9; i++){
@@ -33,12 +57,13 @@ public class PostService {
         }
 
 
-        return respone;
+        return response;
     }
 
 
-    public PostResponseModel carlinsValidationSpecial(SudokuRequestModel request) {
-        PostResponseModel response = new PostResponseModel();
+    public SudokuResponseModel carlinsValidationSpecial(SudokuRequestModel request) {
+        SudokuResponseModel response = new SudokuResponseModel();
+        response.setRequest(request);
 
         List<String> matrixList = request.getLines();
 
@@ -123,7 +148,7 @@ public class PostService {
         }
     }
 
-    public boolean checkValidString(String row){
+    private boolean checkValidString(String row){
         int sum = 0;
         for(int j = 0; j < row.length(); j++){
             sum += Character.getNumericValue(row.charAt(j));
@@ -134,35 +159,7 @@ public class PostService {
         return false;
     }
 
-    public PostResponseModel validateSudokuMatrix(SudokuRequestModel request) {
-        PostResponseModel response = new PostResponseModel();
-
-        if(request ==  null) {
-            response.setMessage("Input was null.");
-            return response;
-        }
-
-        List<String> matrixList = request.getLines();
-
-        int[][] sudokuMatrix = parseMatrix(matrixList);
-
-        if(!checkHorizontals(sudokuMatrix)) {
-            response.setMessage("Horizontals did not pass inspection.");
-            return response;
-        }
-        if(!checkVerticals(sudokuMatrix)) {
-            response.setMessage("Verticals did not pass inspection.");
-            return response;
-        }
-        if(!checkSubMatrices(sudokuMatrix)) {
-            response.setMessage("Sub 3x3s did not pass inspection.");
-            return response;
-        }
-        response.setMessage("Valid sudoku puzzle!");
-        return response;
-    }
-
-    public int[][] parseMatrix(List<String> data) {
+    private int[][] parseMatrix(List<String> data) {
         
         int[][] matrix = new int[9][9];
 
@@ -175,7 +172,7 @@ public class PostService {
         return matrix;
     }
 
-    public boolean checkHorizontals(int[][] matrix) {
+    private boolean checkHorizontals(int[][] matrix) {
         int horizontalSum;
 
         for(int j = 0; j < 9; j++) {
@@ -192,7 +189,7 @@ public class PostService {
         return true;
     }
 
-    public boolean checkVerticals(int[][] matrix) {
+    private boolean checkVerticals(int[][] matrix) {
         int verticalSum;
 
         for(int j = 0; j < 9; j++) {
@@ -209,7 +206,7 @@ public class PostService {
         return true;
     }
 
-    public boolean checkSubMatrices(int[][] matrix) {
+    private boolean checkSubMatrices(int[][] matrix) {
         int subMatrixSum;
         int x = 0;
         int y = 0;
@@ -237,16 +234,4 @@ public class PostService {
 
         return true;
     }
-
-    /*
-     * (0,0)
-     * (3,0)
-     * (6,0)
-     * (0,3)
-     * (3,3)
-     * (6,3)
-     * (0,6)
-     * (3,6)
-     * (6,6)
-     */
 }

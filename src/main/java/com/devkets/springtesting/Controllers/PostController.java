@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.devkets.springtesting.Models.PostRequestModel;
 import com.devkets.springtesting.Models.PostResponseModel;
 import com.devkets.springtesting.Models.SudokuRequestModel;
+import com.devkets.springtesting.Models.SudokuResponseModel;
 import com.devkets.springtesting.Services.PostService;
 
 @RestController
@@ -28,9 +29,18 @@ public class PostController {
     }
 
     @PostMapping(value="/verifySudoku")
-    public ResponseEntity<PostResponseModel> verifySudoku(@RequestBody SudokuRequestModel request) {
+    public ResponseEntity<SudokuResponseModel> verifySudoku(@RequestBody SudokuRequestModel request) {
 
-        PostResponseModel response = new PostResponseModel();
+        SudokuResponseModel response = new SudokuResponseModel();
+        response = postService.validateSudokuMatrix(request);
+
+        return ResponseEntity.ok().body(response);
+    }
+
+    @PostMapping(value="/verifyCarlinSudoku")
+    public ResponseEntity<SudokuResponseModel> verifyCarlinSudoku(@RequestBody SudokuRequestModel request) {
+
+        SudokuResponseModel response = new SudokuResponseModel();
         response = postService.carlinsValidationSpecial(request);
 
         return ResponseEntity.ok().body(response);
