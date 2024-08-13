@@ -23,25 +23,16 @@ public class PostService {
 
         List<String> matrixList = request.getLines();
 
-        boolean rowsValid = false;
-        boolean columnsValid = false;
-        boolean subMatrixValid = false;
+        boolean rowsValid = true;
+        boolean columnsValid = true;
+        boolean subMatrixValid = true;
 
-        /**
-         *        
-        "172549683",
-        "645873219",
-        "389261745",
-        "496327851",
-        "813456972",
-        "257198436",
-        "964715328",
-        "731682594",
-        "528934167"
-         */
+       
 
         for(String i : matrixList){
-            rowsValid = checkValidString(i);
+            if(!checkValidString(i)){
+                rowsValid = false;
+            }
         }
 
         
@@ -50,17 +41,19 @@ public class PostService {
             for (String j : matrixList){
                 sb.append(j.charAt(i));
             }
-            columnsValid = checkValidString(sb.toString());
-        }
-
-        for (int i = 0; i < 3; i++) {
-            StringBuilder sb = new StringBuilder();
-            for (String j : matrixList){
-                sb.append(j.charAt(i));
+            if (!checkValidString(sb.toString())){
+                columnsValid = false;
             }
         }
 
+        int[] subMatrixSums = new int[9];
+        checkSubMatrices(matrixList, subMatrixSums);
 
+        for (int i : subMatrixSums) {
+            if (i != 45) {
+                subMatrixValid = false;
+            }
+        }
 
         if (rowsValid) {
             if (columnsValid) {
@@ -76,6 +69,39 @@ public class PostService {
             response.setMessage("Rows invalid");
         }
         return response;
+    }
+
+    private void checkSubMatrices(List<String> matrixList, int[] subMatrixSums) {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++){
+                int charValue = Character.getNumericValue(matrixList.get(i).charAt(j));
+                if (i < 3) {
+                    if (j < 3) {
+                        subMatrixSums[0] += charValue;
+                    } else if (j < 6) {
+                        subMatrixSums[1] += charValue;
+                    } else {
+                        subMatrixSums[2] += charValue;
+                    }
+                } else if (i < 6) {
+                    if (j < 3) {
+                        subMatrixSums[3] += charValue;
+                    } else if (j < 6) {
+                        subMatrixSums[4] += charValue;
+                    } else {
+                        subMatrixSums[5] += charValue;
+                    }
+                } else {
+                    if (j < 3) {
+                        subMatrixSums[6] += charValue;
+                    } else if (j < 6) {
+                        subMatrixSums[7] += charValue;
+                    } else {
+                        subMatrixSums[8] += charValue;
+                    }
+                }
+            }
+        }
     }
 
     public boolean checkValidString(String row){
@@ -121,9 +147,9 @@ public class PostService {
         
         int[][] matrix = new int[9][9];
 
-        for(int j = 0; j < 9; j++) {
-            for(int k = 0; k < 9; k++) {
-                matrix[j][k] = Character.getNumericValue(data.get(j).charAt(k));
+        for(int i = 0; i < 9; i++) {
+            for(int j = 0; j < 9; j++) {
+                matrix[i][j] = Character.getNumericValue(data.get(i).charAt(j));
             }
         }
 
